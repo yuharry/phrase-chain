@@ -8,7 +8,7 @@ module.exports = function(grunt) {
                 options: {
                     server: path.resolve(__dirname, 'launch.js'),
                     hostname: '*',
-                    //port: 80
+                    port: (process.env.PORT || 3000)
                 }
             }
         }
