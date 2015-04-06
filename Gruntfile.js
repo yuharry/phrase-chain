@@ -3,7 +3,7 @@ module.exports = function(grunt) {
     'use strict';
 
     grunt.initConfig({
-        express: {
+        /*express: {
             myServer: {
                 options: {
                     server: path.resolve(__dirname, 'launch.js'),
@@ -11,9 +11,21 @@ module.exports = function(grunt) {
                     port: (process.env.PORT || 3000)
                 }
             }
+        }*/
+        copy: {
+            main: {
+                files: [{
+                    expand: true,
+                    cwd: 'src/',
+                    src: ['*'],
+                    dest: 'dist/',
+                    filter: 'isFile'
+                }]
+            }
         }
     });
-    grunt.loadNpmTasks('grunt-express');
-    grunt.registerTask('heroku', ['express:myServer', 'express-keepalive']);
+    //grunt.loadNpmTasks('grunt-express');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.registerTask('heroku', ['copy']);
     grunt.registerTask('default', ['heroku']);
 };
