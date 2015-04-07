@@ -3,15 +3,6 @@ module.exports = function(grunt) {
     'use strict';
 
     grunt.initConfig({
-        /*express: {
-            myServer: {
-                options: {
-                    server: path.resolve(__dirname, 'launch.js'),
-                    hostname: '*',
-                    port: (process.env.PORT || 3000)
-                }
-            }
-        }*/
         copy: {
             main: {
                 files: [{
