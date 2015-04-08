@@ -41,26 +41,44 @@ ccdPromiseMaker = function(item) {
 queryByItem = function(info) {
     var item = info.item,
         ccd = info.ccd,
-        totalPages = null;
+        totalPagesZW;
 
     console.log('queryByItem: ', item, ccd);
 
     //first time, get the pages
-    var p = queryPromiseMaker(item, ccd, 1);
+    var p = queryPromiseMaker(item, ccd, 1, 'zw');
     p.then(function(info) {
-        totalPages = info.pages;
-        console.log('after the first call, totalPages is ' + totalPages);
+        totalPagesZW = info.pages;
+        console.log('after the first call, totalPagesZW is ' + totalPagesZW);
         /*for (var i = 1 + 1; i <= pages; i++) {
             console.log('add', ccd, i);
             p.then(queryPromiseMaker(item, ccd, i));
         }*/
         var others = [];
-        for (var i = 1 + 1; i <= totalPages; i++) {
+        for (var i = 1 + 1; i <= totalPagesZW; i++) {
             console.log('add', ccd, i);
-            others.push(queryPromiseMaker(item, ccd, i));
+            others.push(queryPromiseMaker(item, ccd, i, 'zw'));
         }
         Q.all(others).then(writeFile);
     });
+
+    //附錄...列表沒有讀音
+    //first time, get the pages
+    /*var p2 = queryPromiseMaker(item, ccd, 1, 'fl');
+    p2.then(function(info) {
+        totalPagesFL = info.pages;
+        console.log('after the first call, totalPagesFL is ' + totalPagesFL);
+        for (var i = 1 + 1; i <= pages; i++) {
+            console.log('add', ccd, i);
+            p.then(queryPromiseMaker(item, ccd, i));
+        }
+        var others = [];
+        for (var i = 1 + 1; i <= totalPagesFL; i++) {
+            console.log('add', ccd, i);
+            others.push(queryPromiseMaker(item, ccd, i, 'fl'));
+        }
+        Q.all(others).then(writeFile);
+    });*/
 };
 writeFile = function(info) {
     console.log('writing all to file: all.dat', JSON.stringify(info));
@@ -72,7 +90,7 @@ writeFile = function(info) {
     }
     fs.writeFile('all.dat', JSON.stringify(all, null, 2));
 };
-queryPromiseMaker = function(item, ccd, page) {
+queryPromiseMaker = function(item, ccd, page, type) {
     console.log('queryPromiseMaker', item, ccd, page);
     var d = Q.defer();
     request({
@@ -84,7 +102,8 @@ queryPromiseMaker = function(item, ccd, page) {
             basicoptsch: 1,
             o: 'e0',
             qs0: item,
-            jmpage: page
+            jmpage: page,
+            resultype: type
         }
     }, function(error, response, body) {
         var pages = null,
