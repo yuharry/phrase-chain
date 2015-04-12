@@ -24,17 +24,29 @@ module.exports = function(grunt) {
                     dest: 'dist/assets/bootstrap/'
                 }]
             },
-            pages : {
+            src : {
                 files: [{
                     expand: true,
                     cwd: 'pages',
                     src: ['**/*.*'],
                     dest: 'dist'
+                }, {
+                    expand: true,
+                    cwd: 'css',
+                    src: ['**/*.*'],
+                    dest: 'dist/css'
                 }]
+            }
+        },
+        watch: {
+            src: {
+                files: ['pages/**/*.html', 'js/**/*.js', 'css/**/*.css'],
+                tasks: ['copy:src']
             }
         }
     });
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.registerTask('heroku', ['copy']);
     grunt.registerTask('default', ['heroku']);
 };
