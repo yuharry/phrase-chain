@@ -21,7 +21,7 @@
         <div class="navbar-form">
           <div class="input-group">
             <span class="input-group-btn">
-              <button class="btn btn-default" type="button" ng-click="switchStrict()">{{strict?'同音還要同字':'同音可'}}</button>
+              <button class="btn btn-default ng-class:{'btn-danger': strict, 'btn-info': !strict}" type="button" ng-click="switchStrict()">{{strict?'同音還要同字':'同音可'}}</button>
             </span>
             <input type="text" class="form-control" placeholder="search..." ng-model="phrase"/>
             <span class="input-group-btn">
@@ -32,15 +32,16 @@
       </div>
     </div>
   </nav>
-  <div class="container" ng-controller="containerCtrl">
+  <div class="container-fluid chain-container" ng-controller="containerCtrl">
     <div ng-repeat="node in chain track by $index" ng-click="removeDown($index)">
+      <div down-arrow></div>
       <div class="row">
-        <span class="glyphicon glyphicon-arrow-down col-md-12" aria-hidden="true"></span>
-      </div>
-      <div class="row btn-group" data-toggle="buttons">
-        <label class="btn btn-default btn-primary" ng-repeat="c in node track by $index" ng-click="query(c)">
-          <input type="radio" />{{c}}
-        </label>
+        <div class="col-md-12">
+          <label candidate-label
+            ng-repeat="c in node.data track by $index"
+            class="label label-default candi ng-class:{'label-danger': node.strict, 'label-info': !node.strict}"
+            ng-bind="c" ng-click="query(c)"></label>
+        </div>
       </div>  
     </div>
   </div>

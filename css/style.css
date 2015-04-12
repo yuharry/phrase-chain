@@ -1,1 +1,15 @@
 body { padding-top: 70px; }
+.candi {
+    display: inline-block;
+    font-size: 1.2em;
+    margin-right: 5px;
+}
+.label-info.active {
+    background-color: #4F5575;
+}
+.label-danger.active {
+    background-color: #85351B;
+}
+.chain-container .row {
+    text-align: center;
+}

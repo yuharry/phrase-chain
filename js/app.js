@@ -2,7 +2,7 @@
 	'use strict';
 	var app = angular.module('app', []);
 
-	app.factory('phraseService', ['$rootScope', '$http', '$q', function($rootScope, $http, $q) {
+	app.factory('phraseService', ['$http', '$q', function($http, $q) {
 		var service = {},
 			strict = false,
 			ajaxCall = function(phrase, strict) {
@@ -20,22 +20,39 @@
 		service.query = function(phrase) {
 			var d = $q.defer();
 			ajaxCall(phrase, strict).then(function(data) {
+				data.strict = strict;
 				d.resolve(data);
 			});
 
 			return d.promise;
 		};
-
-		service.newQuery = function(phrase) {
-			ajaxCall(phrase, strict).then(function(data) {
-				$rootScope.$emit('newQuery', data);
-			});
-		};
 		return service;
 	}]);
 	//phraseService end
 
-	app.controller('headerCtrl', ['$scope', 'phraseService', function($scope, phraseService) {
+	app.directive('candidateLabel', [function() {
+		return {
+			restrict: 'A',
+			scope: false,
+			link: function(scope, element, attrs) {
+				element.bind('click', function(eventData) {
+					element.siblings().removeClass('active');
+					element.addClass('active');
+				});
+			}
+		};
+	}]);
+	//candidateLabel end
+
+	app.directive('downArrow', [function() {
+		return {
+			restrict: 'A',
+			scope: false,
+			template: '<div class="row"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></div>',
+			replace: true
+		};
+	}]);
+	app.controller('headerCtrl', ['$rootScope', '$scope', 'phraseService', function($rootScope, $scope, phraseService) {
 		$scope.strict = false;
 		$scope.phrase = '一成不變';
 		$scope.switchStrict = function() {
@@ -44,7 +61,9 @@
 		};
 
 		$scope.newQuery = function() {
-			phraseService.newQuery($scope.phrase, $scope.strict);
+			phraseService.query($scope.phrase, $scope.strict).then(function(data) {
+				$rootScope.$emit('newQuery', data);
+			});
 		};
 	}]);
 	//headerCtrl end
@@ -54,16 +73,22 @@
 		var pushError = function() {
 			$scope.chain.push(['我不認識這個成語啊ＱＱ']);
 		};
+
 		var pushCandidates = function(candidates) {
 			$scope.chain.push(candidates);
 		};
+
 		var cb = function(data) {
 			if (data.status !== 'success') {
 				pushError();
 				return;
 			}
-			pushCandidates(data.next);
+			pushCandidates({
+				data: data.next,
+				strict: data.strict
+			});
 		};
+
 		$rootScope.$on('newQuery', function(event, data) {
 			$scope.chain = []; //reset
 			cb(data);
