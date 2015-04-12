@@ -71,7 +71,7 @@
 
 		$scope.query = function(n) {
 			phraseService.query(n).then(function(data) {
-				console.log('query cb');
+				cb(data);
 			});
 		};
 
