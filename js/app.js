@@ -70,24 +70,9 @@
 
 	app.controller('containerCtrl', ['$rootScope', '$scope', 'phraseService', function($rootScope, $scope, phraseService) {
 		$scope.chain = [];
-		var pushError = function() {
-			$scope.chain.push(['我不認識這個成語啊ＱＱ']);
-		};
 
-		var pushCandidates = function(candidates) {
-			$scope.chain.push(candidates);
-		};
-
-		var cb = function(data) {
-			if (data.status !== 'success') {
-				pushError({
-					data: [],
-					strct: data.strct,
-					status: data.status
-				});
-				return;
-			}
-			pushCandidates({
+		var qCallback = function(data) {
+			$scope.chain.push({
 				data: data.next,
 				strict: data.strict,
 				status: data.status
@@ -96,13 +81,12 @@
 
 		$rootScope.$on('newQuery', function(event, data) {
 			$scope.chain = []; //reset
-			console.log(data);
-			cb(data);
+			qCallback(data);
 		});
 
 		$scope.query = function(n) {
 			phraseService.query(n).then(function(data) {
-				cb(data);
+				qCallback(data);
 			});
 		};
 
