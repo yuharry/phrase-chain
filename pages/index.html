@@ -17,11 +17,11 @@
           <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
         </button>
       </div>
-      <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <div class="collapse navbar-collapse navbar-ex1-collapse in">
         <div class="navbar-form">
           <div class="input-group">
             <span class="input-group-btn">
-              <button class="btn btn-default ng-class:{'btn-danger': strict, 'btn-info': !strict}" type="button" ng-click="switchStrict()">{{strict?'同音還要同字':'同音可'}}</button>
+              <button class="btn btn-default ng-class:{'btn-danger': strict, 'btn-info': !strict}" type="button" ng-click="switchStrict()" ng-bind="strict?'同音還要同字':'同音可'"></button>
             </span>
             <input type="text" class="form-control" placeholder="search..." ng-model="phrase"/>
             <span class="input-group-btn">
@@ -41,6 +41,8 @@
             ng-repeat="c in node.data track by $index"
             class="label label-default candi ng-class:{'label-danger': node.strict, 'label-info': !node.strict}"
             ng-bind="c" ng-click="query(c)"></label>
+          <h4 ng-if="node.status == 'success' && !node.data.length">Sad, 下面沒有了</h4>
+          <h4 ng-if="node.status != 'success'">我不認識這個成語啊ＱＱ</h4>
         </div>
       </div>  
     </div>

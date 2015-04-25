@@ -80,17 +80,23 @@
 
 		var cb = function(data) {
 			if (data.status !== 'success') {
-				pushError();
+				pushError({
+					data: [],
+					strct: data.strct,
+					status: data.status
+				});
 				return;
 			}
 			pushCandidates({
 				data: data.next,
-				strict: data.strict
+				strict: data.strict,
+				status: data.status
 			});
 		};
 
 		$rootScope.$on('newQuery', function(event, data) {
 			$scope.chain = []; //reset
+			console.log(data);
 			cb(data);
 		});
 

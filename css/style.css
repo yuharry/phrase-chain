@@ -3,6 +3,7 @@ body { padding-top: 70px; }
     display: inline-block;
     font-size: 1.2em;
     margin-right: 5px;
+    cursor: pointer;
 }
 .label-info.active {
     background-color: #4F5575;
